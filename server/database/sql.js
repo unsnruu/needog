@@ -13,14 +13,32 @@ const pool = mysql.createPool({
 const promisePool = pool.promise();
 
 const sql = {
-  findUser: async (id) => {
+  findUser: async (where) => {
+    const [key, val] = Object.entries(where)[0];
+
     try {
-      const [user] = await promisePool.query(
-        `SELECT * FROM users WHERE id=${id}`
+      const [result] = await promisePool.query(
+        `SELECT * FROM users WHERE ${key}="${val}"`
       );
+      const [user] = result;
       return user;
     } catch (error) {
       console.log(error);
+    }
+  },
+  createUser: async (enrollment) => {
+    const keys = Object.keys(enrollment);
+    const values = Object.values(enrollment).map(
+      (val) => '"' + val.toString() + '"'
+    );
+    try {
+      await promisePool.query(`
+        INSERT INTO users (${keys.toString()})
+        VALUES (${values});
+      `);
+    } catch (error) {
+      console.log(error);
+      throw new Error("MySQL: failed to create a user");
     }
   },
 };
