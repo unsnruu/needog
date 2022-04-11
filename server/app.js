@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const passport = require("passport");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const passportConfig = require("./passport");
@@ -16,6 +17,7 @@ const fileStoreOptions = {
 dotenv.config();
 passportConfig();
 app.set("port", process.env.PORT || 8000);
+app.set("build-path", path.join(__dirname, "..", "client", "build"));
 
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
@@ -23,6 +25,7 @@ const authRouter = require("./routes/auth");
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.static(app.get("build-path")));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
@@ -42,6 +45,10 @@ app.use(cors({ credentials: true, origin: true }));
 
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
+
+app.get("/*", (req, res) => {
+  res.sendFile(app.get("build-path") + "/index.html");
+});
 
 app.listen(app.get("port"), () => {
   console.log(`${app.get("port")}번에서 서버 대기중`);
