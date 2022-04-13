@@ -1,15 +1,18 @@
+//loading상태에 따라서 아예 fallback 처리를 해버리는 게 나으려나??
+
 import React from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { HeaderMenu } from "./HeaderMenu";
-import authAtom, { withIsLoggedIn } from "../recoil/auth";
+import HeaderMenu from "./HeaderMenu";
+import userAtom, { withIsLoggedIn } from "../recoil/user";
 
 function Header() {
   const navigate = useNavigate();
+
   const isLoggedIn = useRecoilValue(withIsLoggedIn);
-  const setAuth = useSetRecoilState(authAtom);
+  const setUser = useSetRecoilState(userAtom);
 
   const handleClickLogOut = async (
     event: React.MouseEvent<HTMLAnchorElement>
@@ -19,7 +22,7 @@ function Header() {
       await axios.get("/auth/logout", {
         withCredentials: true,
       });
-      setAuth((prev) => ({ user: {}, isLoggedIn: false }));
+      setUser((prev) => ({ userId: null, nickname: null, snsId: null }));
       console.log("성공적으로 로그아웃 되었습니다.");
     } catch (err) {
       console.log("로그아웃에 실패하셨습니다.");
@@ -43,4 +46,4 @@ function Header() {
   );
 }
 
-export { Header };
+export default Header;

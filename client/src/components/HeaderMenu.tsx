@@ -16,4 +16,4 @@ function HeaderMenu() {
     </nav>
   );
 }
-export { HeaderMenu };
+export default HeaderMenu;
