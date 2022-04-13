@@ -1,10 +1,10 @@
 import { selector } from "recoil";
-import authAtom from "./atom";
+import userAtom from "./atom";
 
 const withIsLoggedIn = selector({
-  key: "authWithIsLoggedIn",
+  key: "userWithIsLoggedIn",
   get: ({ get }) => {
-    return get(authAtom).isLoggedIn;
+    return get(userAtom).userId ? true : false;
   },
 });
 
