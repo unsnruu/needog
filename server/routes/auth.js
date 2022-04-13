@@ -10,10 +10,11 @@ router.post("/signup", isNotLoggedIn, async (req, res, next) => {
 
   try {
     const exUser = await findUser({ userId });
-    console.log("exUser", exUser);
-    if (exUser.length) {
-      return res.redirect("/join?error=exist");
+
+    if (exUser) {
+      return res.status(404).send();
     }
+
     const hash = await bcrypt.hash(pwd, 12);
     await createUser({ userId, nickname, password: hash });
     res.send("success");
@@ -26,7 +27,7 @@ router.post("/signup", isNotLoggedIn, async (req, res, next) => {
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (error, user, info) => {
     if (error) {
-      console.log("Authenticate Error");
+      console.log("Login Authentication Error");
       console.error(error);
       return next(error);
     }
@@ -41,18 +42,11 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
         console.error(loginError);
         return next(loginError);
       } else {
-        return res.send(user);
+        const { userId, nickname, email, snsId } = user;
+        return res.send({ userId, nickname, email, snsId });
       }
     });
   })(req, res, next);
-});
-
-router.get("/signintest", isLoggedIn, (req, res) => {
-  if (req.isAuthenticated()) {
-    res.send(req.user);
-  } else {
-    res.json("세션 없음");
-  }
 });
 
 router.get("/logout", isLoggedIn, (req, res) => {
