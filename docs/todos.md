@@ -16,5 +16,6 @@
 - [ ] React Helmet 공부하기
 - [ ] React Suspense, React @18기준으로 익히기
 - [ ] Code Split 적용해 보기
+- [ ] 테스팅 코드 도입하기
 
 ## Misc
