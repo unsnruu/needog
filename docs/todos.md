@@ -22,4 +22,17 @@
   - [ ] 아예 서버와 통신이 실패했을 시
 - [ ] 시군구/구/동 주소를 받아오는 api 설계하기
 
-## Misc
+---
+
+# Plan
+
+## Client
+
+1. 기본적인 기능 구현하기
+
+- [ ] data fetching
+- [ ] event
+- [ ] state 관리
+
+2. suspense/ code-splitting 도입하기
+3. 스타일 구현하기
