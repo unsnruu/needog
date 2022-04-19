@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+//Todo : 아무것도 수정안함 수정 필요함
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import Select, { Option } from "./Select";
+import Select, { OptionItem } from "../Select";
 
 interface Selected {
   petKind: PetKind;
@@ -10,10 +11,10 @@ interface Selected {
 }
 interface Selects {
   petKinds: PetOption[];
-  sidos: Option[];
-  sigungus: Option[];
+  sidos: OptionItem[];
+  sigungus: OptionItem[];
 }
-interface PetOption extends Option {
+interface PetOption extends OptionItem {
   key: PetKind;
 }
 type PetKind = "dog" | "cat" | "misc" | "*";
@@ -33,7 +34,7 @@ const petKindsInit: PetOption[] = [
   { key: "misc", text: "기타" },
 ];
 
-function Form() {
+function WriteForm() {
   const [selected, setSelected] = useState<Selected>({
     petKind: "*",
     sido: "*",
@@ -48,12 +49,14 @@ function Form() {
 
   useEffect(() => {
     async function getAllSidos() {
+      if (selects.sidos.length) return;
+
       const {
         data: { regcodes },
       } = await axios.get<ReturnAxios>(
         "https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=*00000000"
       );
-      const allSidos: Option[] = regcodes.map(({ code, name }) => ({
+      const allSidos: OptionItem[] = regcodes.map(({ code, name }) => ({
         key: code.slice(0, 2),
         text: name,
       }));
@@ -61,6 +64,7 @@ function Form() {
 
       setSelects((prev) => ({ ...prev, sidos: allSidos }));
     }
+
     async function getSidoguns(sidoCode: string) {
       if (sidoCode === "*") {
         setSelects((prev) => ({ ...prev, sigungus: [] }));
@@ -73,7 +77,7 @@ function Form() {
         `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=${sidoCode}*00000&is_ignore_zero=true`
       );
 
-      const newSidoguns: Option[] = regcodes.map(({ code, name }) => ({
+      const newSidoguns: OptionItem[] = regcodes.map(({ code, name }) => ({
         key: code.slice(2, 5),
         text: name.split(" ").splice(1).join(" "),
       }));
@@ -83,7 +87,7 @@ function Form() {
 
     getAllSidos();
     getSidoguns(selected.sido);
-  }, [selected.sido]);
+  }, [selected.sido, selects.sidos]);
 
   const createHandleChange = (selecetedKey: keyof Selected) => {
     return ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
@@ -117,5 +121,4 @@ function Form() {
     </form>
   );
 }
-
-export default Form;
+export default WriteForm;
