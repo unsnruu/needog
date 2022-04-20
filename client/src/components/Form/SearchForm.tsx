@@ -1,7 +1,8 @@
+//Todo: api 분리하기
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 import Select, { OptionItem } from "../Select";
+import { getRegSidos, getRegSidoguns } from "../../api";
 
 interface Selected {
   petKind: PetKind;
@@ -17,14 +18,6 @@ interface PetOption extends OptionItem {
   key: PetKind;
 }
 type PetKind = "dog" | "cat" | "misc" | "*";
-
-interface RegCode {
-  name: string;
-  code: string;
-}
-interface ReturnAxios {
-  regcodes: RegCode[];
-}
 
 const petKindsInit: PetOption[] = [
   { key: "*", text: "모든 동물" },
@@ -50,11 +43,7 @@ function SearchForm() {
     async function getAllSidos() {
       if (selects.sidos.length) return;
 
-      const {
-        data: { regcodes },
-      } = await axios.get<ReturnAxios>(
-        "https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=*00000000"
-      );
+      const regcodes = await getRegSidos();
       const allSidos: OptionItem[] = regcodes.map(({ code, name }) => ({
         key: code.slice(0, 2),
         text: name,
@@ -70,11 +59,7 @@ function SearchForm() {
         return;
       }
 
-      const {
-        data: { regcodes },
-      } = await axios.get<ReturnAxios>(
-        `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=${sidoCode}*00000&is_ignore_zero=true`
-      );
+      const regcodes = await getRegSidoguns(sidoCode);
 
       const newSidoguns: OptionItem[] = regcodes.map(({ code, name }) => ({
         key: code.slice(2, 5),
