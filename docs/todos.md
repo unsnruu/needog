@@ -7,9 +7,11 @@
 ## Server
 
 - [ ] db table 구축하기
-  - [ ] missings table 생성하기
+  - [ ] missings table 생성하기d
   - [ ] 'cares' table 생성하기
   - [ ] users을 중심으로 foreign 키 설정하기
+  - [ ] searchForm 부분에서 이후에 ux의 개선을 위해서 `<optgroup/>`을 도입하기
+  - [ ] skeleton loader 도입하기
 
 ## Client
 
