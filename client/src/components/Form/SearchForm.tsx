@@ -1,4 +1,3 @@
-//Todo: api 분리하기
 import React, { useEffect, useState } from "react";
 
 import Select, { OptionItem } from "../Select";
