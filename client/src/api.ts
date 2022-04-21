@@ -39,18 +39,18 @@ async function getRegSidoguns(sidoCode: string) {
 }
 
 function useRegion() {
-  const [sidos, setSidos] = useState<Sido>({
+  const [sido, setSido] = useState<Sido>({
     selected: "*",
     items: [],
   });
-  const [sigungus, setSigungus] = useState<Sigungu>({
+  const [sigungu, setSigungu] = useState<Sigungu>({
     selected: "*",
     items: [],
   });
 
   useEffect(() => {
     async function getAllSidos() {
-      if (sidos.items.length) return;
+      if (sido.items.length) return;
 
       const regcodes = await getRegSidos();
       const allSidos: OptionItem[] = regcodes.map(({ code, name }) => ({
@@ -59,16 +59,16 @@ function useRegion() {
       }));
       allSidos.unshift({ key: "*", text: "모든 지역" });
 
-      setSidos((prev) => ({ ...prev, items: allSidos }));
+      setSido((prev) => ({ ...prev, items: allSidos }));
     }
 
     getAllSidos();
-  }, [sidos.items]);
+  }, [sido.items]);
 
   useEffect(() => {
     async function getSidoguns(sidoCode: string) {
       if (sidoCode === "*") {
-        setSigungus((prev) => ({ ...prev, items: [] }));
+        setSigungu((prev) => ({ ...prev, items: [] }));
         return;
       }
 
@@ -79,12 +79,12 @@ function useRegion() {
         text: name.split(" ").splice(1).join(" "),
       }));
       newSidoguns.unshift({ key: "*", text: "모든 지역" });
-      setSigungus((prev) => ({ ...prev, items: newSidoguns }));
+      setSigungu((prev) => ({ ...prev, items: newSidoguns }));
     }
-    getSidoguns(sidos.selected);
-  }, [sidos.selected]);
+    getSidoguns(sido.selected);
+  }, [sido.selected]);
 
-  return { sidos, setSidos, sigungus, setSigungus };
+  return { sido, setSido, sigungu, setSigungu };
 }
 
 export { useRegion };
