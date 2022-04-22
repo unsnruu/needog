@@ -1,6 +1,5 @@
 //API docs: https://juso.dev/
 import axios from "axios";
-import { kill } from "process";
 import { useState, useEffect } from "react";
 import { OptionItem } from "./components/Select";
 
@@ -22,22 +21,6 @@ interface Sigungu {
 
 const jusoUrl = `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=`;
 
-async function getRegSidos() {
-  const {
-    data: { regcodes },
-  } = await axios.get<ReturnAxios>(`${jusoUrl}??00000000`);
-  return regcodes;
-}
-
-async function getRegSidoguns(sidoCode: string) {
-  const {
-    data: { regcodes },
-  } = await axios.get<ReturnAxios>(
-    `${jusoUrl}${sidoCode}*00000&is_ignore_zero=true`
-  );
-  return regcodes;
-}
-
 function useRegion() {
   const [sido, setSido] = useState<Sido>({
     selected: "*",
@@ -49,6 +32,18 @@ function useRegion() {
   });
 
   useEffect(() => {
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
+    async function getRegSidos() {
+      const {
+        data: { regcodes },
+      } = await axios.get<ReturnAxios>(`${jusoUrl}??00000000`, {
+        cancelToken: source.token,
+      });
+      return regcodes;
+    }
+
     async function getAllSidos() {
       if (sido.items.length) return;
 
@@ -63,9 +58,24 @@ function useRegion() {
     }
 
     getAllSidos();
+    return () => {
+      source.cancel();
+    };
   }, [sido.items]);
 
   useEffect(() => {
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
+    async function getRegSidoguns(sidoCode: string) {
+      const {
+        data: { regcodes },
+      } = await axios.get<ReturnAxios>(
+        `${jusoUrl}${sidoCode}*00000&is_ignore_zero=true`,
+        { cancelToken: source.token }
+      );
+      return regcodes;
+    }
     async function getSidoguns(sidoCode: string) {
       if (sidoCode === "*") {
         setSigungu((prev) => ({ ...prev, items: [] }));
@@ -82,6 +92,9 @@ function useRegion() {
       setSigungu((prev) => ({ ...prev, items: newSidoguns }));
     }
     getSidoguns(sido.selected);
+    return () => {
+      source.cancel();
+    };
   }, [sido.selected]);
 
   return { sido, setSido, sigungu, setSigungu };
