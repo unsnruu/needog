@@ -10,7 +10,9 @@ import userAtom from "./recoil/user";
 import { Home } from "./Pages/Home";
 import { NotFound } from "./Pages/404";
 import { Adoption } from "./Pages/Adoption";
-import Missing, { Board, Write } from "./Pages/Missing/";
+import Missing from "./Pages/Missing";
+import Board from "./Pages/Board";
+import Write from "./Pages/Write";
 import { Care } from "./Pages/Care";
 import { Community } from "./Pages/Community";
 import { LogIn } from "./Pages/LogIn";
@@ -39,12 +41,18 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="adoption" element={<Adoption />}></Route>
-        <Route path="missing" element={<Missing />}>
-          <Route path="write" element={<Write />}></Route>
+        <Route path="adoption" element={<Adoption />}>
           <Route index element={<Board />}></Route>
+          <Route path="write" element={<Write />}></Route>
         </Route>
-        <Route path="care" element={<Care />}></Route>
+        <Route path="missing" element={<Missing />}>
+          <Route index element={<Board />}></Route>
+          <Route path="write" element={<Write />}></Route>
+        </Route>
+        <Route path="care" element={<Care />}>
+          <Route index element={<Board />}></Route>
+          <Route path="write" element={<Write />}></Route>
+        </Route>
         <Route path="community" element={<Community />}></Route>
         <Route path="login" element={<LogIn />}></Route>
         <Route path="signup" element={<SignUp />}></Route>

@@ -1,4 +1,6 @@
+import { Outlet } from "react-router-dom";
+
 function Adoption() {
-  return <div>동물 입양 페이지</div>;
+  return <Outlet />;
 }
 export { Adoption };
