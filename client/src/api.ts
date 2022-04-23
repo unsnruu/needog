@@ -52,14 +52,14 @@ function useRegion() {
         key: code.slice(0, 2),
         text: name,
       }));
-      allSidos.unshift({ key: "*", text: "모든 지역" });
+      // allSidos.unshift({ key: "*", text: "모든 지역" });
 
       setSido((prev) => ({ ...prev, items: allSidos }));
     }
 
     getAllSidos();
     return () => {
-      source.cancel();
+      source.cancel("Cancel getAllSidos");
     };
   }, [sido.items]);
 
@@ -88,12 +88,12 @@ function useRegion() {
         key: code.slice(2, 5),
         text: name.split(" ").splice(1).join(" "),
       }));
-      newSidoguns.unshift({ key: "*", text: "모든 지역" });
+      // newSidoguns.unshift({ key: "*", text: "모든 시군구" });
       setSigungu((prev) => ({ ...prev, items: newSidoguns }));
     }
     getSidoguns(sido.selected);
     return () => {
-      source.cancel();
+      source.cancel("Cancel getSidoguns");
     };
   }, [sido.selected]);
 
