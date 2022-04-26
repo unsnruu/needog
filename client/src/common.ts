@@ -6,6 +6,12 @@ const petInitItems: PetOption[] = [
   { key: "misc", text: "기타" },
 ];
 
-export { petInitItems };
-
 const allPet = { key: "*", text: "모든 동물" };
+
+const getBaseUrl = (pathname: string) => {
+  const split = pathname.split("/").filter((v) => v !== "");
+
+  return split[0];
+};
+
+export { petInitItems, getBaseUrl };
