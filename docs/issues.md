@@ -140,6 +140,12 @@ function PostInner({ content }: { content: Content }) {
       editor.setOptions();
     },
   });
+  if (content === null) return <div>Loading</div>;
   return <EditorContent editor={editor} />;
 }
 ```
+
+### 참고
+
+- https://tiptap.dev/guide/output#listening-for-changes
+- https://tiptap.dev/api/events
