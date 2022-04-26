@@ -23,6 +23,7 @@ app.set("build-path", path.join(__dirname, "..", "client", "build"));
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
 const missingRouter = require("./routes/missing");
+const careRouter = require("./routes/care");
 
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
@@ -47,6 +48,7 @@ app.use(cors({ credentials: true, origin: true }));
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use("/missing", missingRouter);
+app.use("/care", careRouter);
 
 //Todo
 /* 
