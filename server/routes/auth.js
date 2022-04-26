@@ -34,7 +34,7 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 
     if (!user) {
       console.log("No user has found");
-      return;
+      return res.status(404).send(null);
     }
 
     return req.login(user, (loginError) => {
@@ -52,7 +52,10 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 router.get("/logout", isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy();
-  res.clearCookie("connect.sid", { httpOnly: true }).status(200).send();
+  res
+    .clearCookie("connect.sid", { httpOnly: true })
+    .status(200)
+    .send("성공적으로 로그아웃 되었습니다.");
 });
 
 module.exports = router;
