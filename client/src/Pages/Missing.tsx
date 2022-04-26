@@ -1,10 +1,14 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useMemo } from "react";
+import { Outlet, useLocation, useOutletContext } from "react-router-dom";
+import { getBaseUrl } from "../common";
 
 function Missing() {
+  const { pathname } = useLocation();
+  const baseUrl = useMemo(() => getBaseUrl(pathname), [pathname]);
+
   return (
     <>
-      <Outlet />
+      <Outlet context={baseUrl} />
     </>
   );
 }

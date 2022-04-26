@@ -1,28 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useState, useMemo } from "react";
+import { Link, useLocation, useOutletContext } from "react-router-dom";
 
 import { useRegion } from "../api";
 import { PetState, HandleChangeSelect } from "../components/types";
 import { petInitItems } from "../common";
 
-import Post from "../components/Post";
+import Card, { CardProp } from "../components/Card";
 import Select from "../components/Select";
 import axios from "axios";
 
 type Pathname = "/missing" | "/care" | "/adoption" | string;
 
-interface Post {
-  id: string | number;
-  author: string;
-  title: string;
-  text: string;
-  sido?: string;
-  sigungu?: string;
-  createdAt?: Date;
-  pet?: string;
-}
-
-type AxiosPostData = Post[];
+type AxiosRerturnBoard = CardProp[];
 
 function getTitle(pathname: Pathname) {
   let title = "";
@@ -43,16 +32,16 @@ function getTitle(pathname: Pathname) {
 }
 
 function Board() {
-  const { pathname } = useLocation();
-
   const { sido, setSido, sigungu, setSigungu } = useRegion();
   const [pet, setPet] = useState<PetState>({
     selected: "*",
     items: petInitItems,
   });
+  const { pathname } = useLocation();
+  const baseUrl = useOutletContext<string>();
 
-  const [posts, setPosts] = useState<Post[]>([]);
-  let title = getTitle(pathname);
+  const [posts, setPosts] = useState<CardProp[]>([]);
+  let title = useMemo(() => getTitle(pathname), [pathname]);
 
   const handleChangePet = ({ target }: HandleChangeSelect) => {
     setPet((prev) => ({ ...prev, selected: target.value }));
@@ -70,12 +59,14 @@ function Board() {
   };
 
   useEffect(() => {
-    async function init() {
-      const { data } = await axios.post<AxiosPostData>("/missing/board/init");
+    async function initBoard() {
+      const { data } = await axios.post<AxiosRerturnBoard>(
+        `/${baseUrl}/board/init`
+      );
       setPosts((prev) => [...prev, ...data]);
     }
-    init();
-  }, []);
+    initBoard();
+  }, [baseUrl]);
 
   return (
     <div>
@@ -97,8 +88,14 @@ function Board() {
       <hr />
       <h3>BOARD</h3>
       <main id="board-main" style={{ display: "flex" }}>
-        {posts.map(({ author, id, title, text }) => (
-          <Post author={author} key={id} text={text} titile={title} />
+        {posts.map(({ author, id, title }) => (
+          <Card
+            key={id}
+            id={id}
+            title={title}
+            author={author}
+            baseUrl={baseUrl}
+          />
         ))}
       </main>
     </div>
