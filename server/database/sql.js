@@ -41,6 +41,48 @@ const sql = {
       throw new Error("MySQL: failed to create a user");
     }
   },
+  getPostsByPetLoc: async ({ pet, sido, sigungu, table }) => {
+    const wherePet = pet ? `AND pet = ${pet}` : "";
+    const whereSido = sido ? `AND sido = ${sido}` : "";
+    const whereSigungu = sigungu ? `AND sigungu = ${sigungu}` : "";
+
+    const query = `SELECT * FROM ${table} WHERE TRUE ${wherePet} ${whereSido} ${whereSigungu} `;
+    try {
+      const [results, metas] = await promisePool.query(query);
+      return results;
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  getPostById: async ({ table, id }) => {
+    const query = `SELECT * FROM ${table} WHERE id = ${id};`;
+    try {
+      const [[result], metas] = await promisePool.query(query);
+      return result;
+    } catch (err) {
+      console.log("Failed get a Post from " + table);
+    }
+  },
+
+  createPost: async (post) => {
+    const { title, json, author, pet, sido, sigungu, table } = post;
+    const jsonText = JSON.stringify(json);
+
+    const values = [title, jsonText, author, pet, sido, sigungu];
+
+    try {
+      await promisePool.query(
+        `
+        INSERT INTO ${table} (title, json, author, pet, sido, sigungu)
+        VALUES(?, ?, ?, ?, ?, ?)
+      `,
+        values
+      );
+    } catch (err) {
+      console.log("Failed to create a new post");
+      throw new Error(err);
+    }
+  },
 };
 
 module.exports = sql;
