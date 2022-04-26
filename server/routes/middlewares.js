@@ -1,5 +1,9 @@
-const { createPost, getPostsByPetLoc } = require("../database/sql");
 const { getTableName } = require("../common");
+const {
+  createPost,
+  getPostsByPetLoc,
+  getPostById,
+} = require("../database/sql");
 
 exports.isLoggedIn = (req, res, next) => {
   console.log("isLoggedIn executed");
@@ -62,5 +66,18 @@ exports.initPost = async (req, res) => {
   } catch (err) {
     console.log("Error on care/board/init");
     throw new Error(err);
+  }
+};
+
+exports.sendPostById = async (req, res) => {
+  const table = getTableName(req.baseUrl);
+  const { id } = req.params;
+
+  try {
+    const post = await getPostById({ table, id });
+    console.log(post);
+    res.send(post);
+  } catch (err) {
+    console.log("Error on /post/:id router");
   }
 };
