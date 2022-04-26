@@ -17,6 +17,8 @@
 - [⭐️ 003: 컴포넌트에서 데이터 로직 분리하기](#⭐️-issue-003-컴포넌트에서-데이터-로직을-분리해서-설계하기)
 - [❌ 004: 대한민국 지역 api와 경기도 지역 코드에서의 문제](#⭐️-issue-004-대한민국-지역-api와-경기도-지역-코드의-문제)
 - [✅ 005: axios의 ReturnType 설정하기 ](#✅-issue-005-axios의-return-type-설정하기)
+- [✅ 006: tiptap의 자료구조를 json형태로 mysql 서버에 저장하는데 실패](#✅-issue-006-tiptap의-자료구조를-json형태로-mysql-서버에-저장하는데-실패하는-문제)
+- [✅ 007: tiptap의 content 수정이 안되는 문제](#✅-issue-007-tiptap의-configuration에서-content-옵션을-수정하기)
 
 ---
 
@@ -61,3 +63,83 @@
 1. Axios의 반환값을 설정하는 방법을 자꾸만 잊는 바람에 쓸데없이 시간을 낭비하게 된다.
 2. Axios의 반환값은 Generic을 통해서 설정한ㄱ다. 가령 `const result = await axios.post<T>(url,{})`와 같은 식이다. 이때 T로 예시를 든 Generic에 들어가는 값은 `result={...,data:T}`로 설정된다. 따라서 T를 `interface { data:{} }`까지 설정할 필요는 없다. 그럼에도 나는 자꾸만 data까지 설정하려고 해서 문제가 발생한다. 유의할 것!
 3. Post를 DB에서 받아오는 과정에서도 `map 함수를 사용할 수 없다`는 경고메세지가 뜨는데 왜 이럴까 싶었다. useEffect가 문제일까 싶어서(괜히 모든 문제는 여기일 것 같다) 들여다 봤지만, 독립적으로 작동하는 useEffect가 서로 충돌할 리도 없을 터였다. 다시 보니까 어이없게도 Object를 posts state에 넣어두고는 map을 쓰려고 해서 생긴 문제였다.
+
+## ✅ Issue 006: tiptap의 자료구조를 JSON형태로 MySQL 서버에 저장하는데 실패하는 문제
+
+1. `tiptap`으로 작성한 게시글의 내용을 tiptap의 고유한 데이터 타입으로 MySQL에 저장하고, 다시 불러와 게시글로 보여주려고 했다. tiptap에서 자체적으로 DOM의 자료구조를 반환하는 메서드를 제공하므로 그걸 활용하고자 했다. `getJson()`을 사용하면 JSON 형식으로 자료구조를 받아 MySQL에 저장하면 되는 아주 간단한 문제라고 생각했다.
+2. 먼저 MySQL에서 JSON 형식을 제공하는 지 찾아보았다. 블로그들을 보니 JSON 타입으로 저장이 가능하다고 한다. 실제로 Workbench에서 테이블의 컬럼 타입을 선택하는 칸에 JSON을 선택할 수 있었다. 그럼 문제가 간단해졌다. 바로 서버측으로 데이터를 보내서 저장하게끔 하였다. 그런데 계속 _syntax error_ 가 발생했다.
+3. 결국 stackoverflow와 여러 블로그들을 뒤져보고 그 결과를 대입해 보아도 문제가 사라지지 않았다.
+   1. 처음에는 SQL 문법에 문제가 있는 줄 알았다.(따지고 보면 이게 정답이었다). 문법을 고치고 escape로 쓰이는 `?`도 도입해 보았다.
+   2. 이상하게도 workbench에서는 제대로 동작했다.
+4. 정말 오랫동안 검색과 검색을 끝마친 후에 이에 대해서 설명해 주는 블로그를 찾았다. 결론은 아직 mysql2가 json형식을 제공하지 않는다는 것이었다. 최신 MySQL은 JSON 형식을 제공하지만, mysql(package)에서는 아직 제공하지 않는 모양이었다. 이후에 오류를 다시보니 버전을 확인하라고 써있었다. 알고 있었지만 그럴리가 없다고 생각했기 때문에 확인조차 하지 않은 것이었다. 결국 JSON을 TEXT로 대신하니 제대로 작동하였다.
+5. 참고 : [Node.js : Sequelize Mysql 버전이 json타입을 지원하지 않을 때](https://uju-tech.tistory.com/48)
+
+## ✅ Issue 007: tiptap의 configuration에서 content 옵션이 수정 안되는 문제
+
+1. MySQL 서버에 저장된 tiptap의 content 자료구조를 서버측에서 받아와, `Post.tsx`에서도 tiptap을 활용해보고자 했다.
+2. 그런데 useEffect를 사용해 서버측에서 response를 받아 content를 갱신해보려 했지만 뜻대로 되지 않았다.
+   1. 일단 editor configuration의 content 옵션에는 임의의 값을 설정하려고 했다. 그 후 useState를 통해서 관리되는 content의 값을 useEffect를 통해 서버측에서 받아온 값으로 업데이트 하려고 했다.
+   2. 그런데 예상과는 달리 콘텐츠의 수정이 불가능 했다. 아무래도 useEditor를 호출하면서 이미 고정된 값으로 content가 정해지는 것 같았다.
+   3. 이후에 documentation을 뒤져서 content를 수정하는 method(`editor.command.insertContent()`)를 찾았다.
+   4. 이를 활용해서 Content 데이터를 받아온다면 useEffect에서 수정하도록 하였다.
+3. 또 다른 방법이 있다.
+   1. 아예 PostContainer을 만들어서 Post를 반환하도록 하였다.
+   2. Container에서 useEffect를 사용하여 Content 타입의 데이터를 받아와서 Post로 넘겨주는 식으로 만들었다.
+4. 둘 다 제대로 작동했다. 처음에는 굳이 컴포넌트를 두개로 나눌 필요 없는 2번 방법이 좋다고 생각했다. 그런데 아무래도 로우레벨 API를 사용하는 2번 방법 보다는 3번이 보다 협엽과 이후의 수정을 생각한다면 좋을 것 같다고 느꼈다.
+
+```tsx
+// 2번 방법
+function Post() {
+  const { id } = useParams<{ id: string }>();
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    editable: false,
+    content: "",
+  });
+
+  useEffect(() => {
+    async function init() {
+      try {
+        if (!editor) return;
+        const { data } = await axios.post<AxiosReturn>(`/missing/post/${id}`);
+        editor.commands.clearContent();
+        editor.commands.insertContent(JSON.parse(data.json));
+      } catch (err) {}
+    }
+    init();
+  }, [id, editor]);
+
+  return <EditorContent editor={editor} />;
+}
+// 3번 방법
+function Post() {
+  const { id } = useParams<{ id: string }>();
+  const [content, setContent] = useState<Content>(null);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const { data } = await axios.post<AxiosReturn>(`/missing/post/${id}`);
+        setContent((prev) => JSON.parse(data.json));
+      } catch (err) {}
+    }
+    init();
+  }, [id]);
+
+  if (content === null) return null;
+  return <PostInner content={content} />;
+}
+
+function PostInner({ content }: { content: Content }) {
+  const editor = useEditor({
+    extensions: [StarterKit],
+    editable: true,
+    content,
+    onCreate({ editor }) {
+      editor.setOptions();
+    },
+  });
+  return <EditorContent editor={editor} />;
+}
+```
