@@ -1,5 +1,3 @@
-import { OptionItem } from "../Select";
-
 export type HandleChangeSelect = React.ChangeEvent<HTMLSelectElement>;
 
 export interface PetState {
@@ -7,8 +5,9 @@ export interface PetState {
   items: PetOption[];
 }
 
-export interface PetOption extends OptionItem {
+export interface PetOption {
   key: PetKind;
+  text: string;
 }
 
 type PetKind = "dog" | "cat" | "misc" | "*" | string;
