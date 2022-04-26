@@ -13,6 +13,7 @@
   - [ ] 'cares' table 생성하기
   - [ ] users을 중심으로 foreign 키 설정하기
 - [ ] `passport`에서 failure message나 flash message 전달하도록 하기
+- [ ] Adoption router 구현
 
 ## Client
 
@@ -34,6 +35,7 @@
 - [ ] Card에서 어떤 내용을 보이도록 해야할까?
 - [ ] 이미지 전송하는 방법 찾기
 - [ ] skeleton loader 도입하기
+- [ ] Adoption page 구현
 
 ---
 
