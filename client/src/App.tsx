@@ -17,24 +17,29 @@ import { Care } from "./Pages/Care";
 import { Community } from "./Pages/Community";
 import { LogIn } from "./Pages/LogIn";
 import { SignUp } from "./Pages/SignUp";
+import { Post } from "./Pages/Post";
 
 function App() {
   const setUser = useSetRecoilState(userAtom);
 
   useEffect(() => {
-    async function init() {
-      console.log("FUNC: init");
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
+    async function initApp() {
       try {
         const { data: user } = await axios.get("/init", {
           withCredentials: true,
+          cancelToken: source.token,
         });
         setUser((prev) => user);
       } catch (err) {
-        console.log("세션 아이디를 통해 로그인 할 수 없습니다.");
+        console.error(`Error on initApp`, err);
       }
     }
-    init();
-  }, []);
+    initApp();
+    return () => source.cancel("Axios has canceled on initApp");
+  }, [setUser]);
 
   return (
     <>
@@ -48,10 +53,12 @@ function App() {
         <Route path="missing" element={<Missing />}>
           <Route index element={<Board />}></Route>
           <Route path="write" element={<Write />}></Route>
+          <Route path="post/:id" element={<Post />}></Route>
         </Route>
         <Route path="care" element={<Care />}>
           <Route index element={<Board />}></Route>
           <Route path="write" element={<Write />}></Route>
+          <Route path="post/:id" element={<Post />}></Route>
         </Route>
         <Route path="community" element={<Community />}></Route>
         <Route path="login" element={<LogIn />}></Route>
