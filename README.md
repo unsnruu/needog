@@ -31,6 +31,10 @@
 - Passport
 - Mysql2
 
+### APIs
+
+- https://juso.dev/docs/reg-code-api/
+
 ---
 
 ## Todos
