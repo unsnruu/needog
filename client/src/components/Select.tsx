@@ -1,16 +1,18 @@
 import React from "react";
 
 type SelectProps = {
-  optionItems: Option[];
-  handleChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  optionItems: OptionItem[];
+  handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
-export type Option = { key: string; text: string };
+
+export type OptionItem = { key: string; text: string; disabled?: boolean };
 
 function Select({ optionItems, handleChange }: SelectProps) {
+  if (!optionItems.length) return null;
   return (
-    <select onChange={handleChange}>
-      {optionItems.map(({ key, text }) => (
-        <option key={key} value={key}>
+    <select onChange={handleChange} defaultValue={optionItems[0].key}>
+      {optionItems.map(({ key, text, disabled }) => (
+        <option key={key} value={key} disabled={disabled || false}>
           {text}
         </option>
       ))}
