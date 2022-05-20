@@ -1,3 +1,0 @@
-function Edit() {}
-
-export { Edit };
