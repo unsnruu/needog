@@ -1,8 +1,10 @@
 //Todo : 로그인 시에만 이 페이지 방문 가능하도록 navigate해야한다.
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-// import axios from "axios";
-// import { useNavigate, useOutletContext } from "react-router-dom";
+import axios from "axios";
+
+import { getBasePathname } from "../apis";
+
+import { useNavigate, useLocation } from "react-router-dom";
 // import { useEditor, EditorContent } from "@tiptap/react";
 // import StarterKit from "@tiptap/starter-kit";
 // import Image from "@tiptap/extension-image";
@@ -15,10 +17,9 @@ import { useLocation } from "react-router-dom";
 // import { petInitItems } from "../data";
 
 function Write() {
-  const [title, setTitle] = useState("");
   const location = useLocation();
-  console.log(location);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const pathname = getBasePathname(location.pathname);
 
   // const editor = useEditor({
   //   extensions: [StarterKit, Image],
