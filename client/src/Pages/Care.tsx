@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { getBaseUrl } from "../common";
+import { getBasePathname } from "../apis/getBasePathname";
 
 function Care() {
   const { pathname } = useLocation();
-  const baseUrl = useMemo(() => getBaseUrl(pathname), [pathname]);
+  const baseUrl = useMemo(() => getBasePathname(pathname), [pathname]);
 
   return <Outlet context={baseUrl} />;
 }

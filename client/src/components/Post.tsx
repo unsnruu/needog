@@ -3,7 +3,7 @@ import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
 import { useEditor, EditorContent, Content } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { getBaseUrl } from "../common";
+import { getBasePathname } from "../apis/getBasePathname";
 
 interface AxiosReturn {
   id: number;
@@ -19,7 +19,7 @@ type Params = { id: string };
 function Post() {
   const { id } = useParams<Params>();
   const { pathname } = useLocation();
-  const baseUrl = useMemo(() => getBaseUrl(pathname), [pathname]);
+  const baseUrl = useMemo(() => getBasePathname(pathname), [pathname]);
 
   const [content, setContent] = useState<Content>(null);
   const [title, setTitle] = useState("");

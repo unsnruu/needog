@@ -3,9 +3,10 @@
 // 보드 내부 혹은 useRegion 내부의 문제가 아닐까 싶다.ㅡ
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { withSidoOptionItems } from "../recoil/sido";
 import getRegion from "../apis/getRegion";
+import { getBasePathname } from "../apis/getBasePathname";
 
 import { OptionItem } from "../common/types";
 import Select from "./Select";
@@ -39,7 +40,10 @@ const initialItems = {
   sigungu: [],
 };
 
-function Board({ pathname }: BoardProps) {
+function Board() {
+  const location = useLocation();
+  const pathname = getBasePathname(location.pathname);
+
   const [selected, setSelected] = useState<Selected>(initialSelected);
   const [items, setItems] = useState<Items>(initialItems);
 

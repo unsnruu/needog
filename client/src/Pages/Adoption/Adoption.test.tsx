@@ -10,7 +10,7 @@ test("/adoption에서 Board 컴포넌트 렌더링하기", () => {
     <MemoryRouter initialEntries={["/adoption"]}>
       <Routes>
         <Route path="adoption" element={<Adoption />}>
-          <Route index element={<Board pathname="/adoption" />} />
+          <Route index element={<Board />} />
         </Route>
       </Routes>
     </MemoryRouter>

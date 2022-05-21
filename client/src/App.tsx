@@ -7,17 +7,17 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import userAtom from "./recoil/user";
 
-import { Home } from "./Pages/Home";
+import { Home } from "./Pages/Home/Home";
 import { NotFound } from "./Pages/404";
-import { Adoption } from "./Pages/Adoption";
+import Adoption from "./Pages/Adoption/Adoption";
 import Missing from "./Pages/Missing";
-import Board from "./Pages/Board";
-import Write from "./Pages/Write";
+import Board from "./components/Board";
+import Write from "./components/Write";
 import { Care } from "./Pages/Care";
 import { Community } from "./Pages/Community";
 import { LogIn } from "./Pages/LogIn";
 import { SignUp } from "./Pages/SignUp";
-import { Post } from "./Pages/Post";
+import { Post } from "./components/Post";
 
 function App() {
   const setUser = useSetRecoilState(userAtom);

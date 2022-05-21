@@ -1,5 +1,3 @@
-//loading상태에 따라서 아예 fallback 처리를 해버리는 게 나으려나??
-
 import React from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -47,3 +45,5 @@ function Header() {
 }
 
 export default Header;
+
+//? loading상태에 따라서 아예 fallback 처리를 해버리는 게 나으려나

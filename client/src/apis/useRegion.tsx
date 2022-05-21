@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import { OptionItem } from "../common/types";
-import { SearchState } from "../components/types";
+import { SearchState } from "../common/types";
 
 interface RegCodes {
   regcodes: RegCode[];

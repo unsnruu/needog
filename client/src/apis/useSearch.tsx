@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useReducer } from "react";
-import { OptionItem } from "../components/Select";
+import { OptionItem } from "../common/types";
 
-import { getSigunguQuery } from "../common";
-import { petInitItems } from "../data";
+import { getSigunguQuery } from "../apis/getSigunguQuery";
+import { petInitItems } from "../common/data";
 import getRegion from "./getRegion";
 import deepClone from "./deepCloneObject";
 import axios from "axios";
