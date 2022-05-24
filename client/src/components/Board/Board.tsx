@@ -3,6 +3,7 @@
 
 //todo sido의 값이 바뀐다면 sigungu의 값도 dependent하게 초기화 되어야 한다.
 // 너무 어렵네 어떻게 해야 깔끔하게 짤 수 있으련지
+//todo 궁극적으로는 items에서 sido를 관리할 필요가 없을 듯.
 
 import React, { useState, useEffect, useReducer, createContext } from "react";
 import { useLocation } from "react-router-dom";
@@ -26,7 +27,8 @@ type CardItem = Omit<CardProp, "pathname">;
 type BoardState = { items: Items; selected: Selected; cards: CardItem[] };
 type BoardAction =
   | { type: "INIT_SIGUNGU"; payload: OptionItem[] }
-  | { type: "INIT_CARD"; payload: CardItem[] };
+  | { type: "INIT_CARD"; payload: CardItem[] }
+  | { type: "INIT_SIDO"; payload: OptionItem[] };
 
 function boardReducer(state: BoardState, action: BoardAction): BoardState {
   switch (action.type) {
@@ -35,6 +37,9 @@ function boardReducer(state: BoardState, action: BoardAction): BoardState {
     }
     case "INIT_SIGUNGU": {
       return { ...state, items: { ...state.items, sigungu: action.payload } };
+    }
+    case "INIT_SIDO": {
+      return { ...state, items: { ...state.items, sido: action.payload } };
     }
     default:
       return state;
@@ -63,15 +68,15 @@ function Board() {
 
   useEffect(() => {
     //init sido items
-    setItems((prev) => ({ ...prev, sido: sidoItems }));
+    boardDispatch({ type: "INIT_SIDO", payload: sidoItems });
   }, [sidoItems]);
 
   useEffect(() => {
     //init sigungu items
     (async function getSigungu() {
       try {
-        if (!selected.sido) return;
-        const query = selected.sido.slice(0, 2) + "*00000";
+        if (!boardState.selected.sido) return;
+        const query = boardState.selected.sido.slice(0, 2) + "*00000";
         const results = await getRegion(query, true);
 
         if (!results) return;
@@ -86,7 +91,7 @@ function Board() {
         console.error(error);
       }
     })();
-  }, [selected.sido]);
+  }, [boardState.selected.sido]);
 
   useEffect(() => {
     //init card items
@@ -105,20 +110,6 @@ function Board() {
     if (!boardState.cards.length) getCardItems();
   }, [pathname, boardState.cards.length, selected]);
 
-  const handleChangePet = (event: SelectChangeEvent) => {
-    setSelected((prev) => ({ ...prev, pet: event.target.value }));
-  };
-  const handleChangeSido = (event: SelectChangeEvent) => {
-    setSelected((prev) => ({
-      ...prev,
-      sido: event.target.value,
-      sigungu: null,
-    }));
-  };
-  const handleChangeSigungu = (event: SelectChangeEvent) => {
-    setSelected((prev) => ({ ...prev, sigungu: event.target.value }));
-  };
-
   const handleClickSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     console.log(selected);
   };
@@ -131,9 +122,6 @@ function Board() {
         <BoardHeading isLoggedIn={isLoggedIn} title={title} />
         <SearchForm
           items={items}
-          handleChangePet={handleChangePet}
-          handleChangeSido={handleChangeSido}
-          handleChangeSigungu={handleChangeSigungu}
           handleClickSubmit={handleClickSubmit}
           setSelected={setSelected}
         />
