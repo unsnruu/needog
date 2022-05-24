@@ -4,7 +4,7 @@
 //todo sido의 값이 바뀐다면 sigungu의 값도 dependent하게 초기화 되어야 한다.
 // 너무 어렵네 어떻게 해야 깔끔하게 짤 수 있으련지
 
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, createContext } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
@@ -55,7 +55,7 @@ function Board() {
 
   const [selected, setSelected] = useState<Selected>(getInitSelected());
   const [items, setItems] = useState<Items>(getInitItems());
-  const [cardItems, setCardItems] = useState<CardItem[]>([]);
+  // const [cardItems, setCardItems] = useState<CardItem[]>([]);
 
   const sidoItems = useRecoilValue(withSidoOptionItems);
   const isLoggedIn = useRecoilValue(withIsLoggedIn);
@@ -102,8 +102,8 @@ function Board() {
       }
     }
 
-    if (!cardItems.length) getCardItems();
-  }, [pathname, cardItems.length, selected]);
+    if (!boardState.cards.length) getCardItems();
+  }, [pathname, boardState.cards.length, selected]);
 
   const handleChangePet = (event: SelectChangeEvent) => {
     setSelected((prev) => ({ ...prev, pet: event.target.value }));
@@ -123,19 +123,23 @@ function Board() {
     console.log(selected);
   };
 
+  const BoardContext = createContext([boardState, boardDispatch]);
+
   return (
-    <Grid container justifyContent={"center"}>
-      <BoardHeading isLoggedIn={isLoggedIn} title={title} />
-      <SearchForm
-        items={items}
-        handleChangePet={handleChangePet}
-        handleChangeSido={handleChangeSido}
-        handleChangeSigungu={handleChangeSigungu}
-        handleClickSubmit={handleClickSubmit}
-        setSelected={setSelected}
-      />
-      <BoardMain cardItems={cardItems} pathname={pathname} />
-    </Grid>
+    <BoardContext.Provider value={[boardState, boardDispatch]}>
+      <Grid container justifyContent={"center"}>
+        <BoardHeading isLoggedIn={isLoggedIn} title={title} />
+        <SearchForm
+          items={items}
+          handleChangePet={handleChangePet}
+          handleChangeSido={handleChangeSido}
+          handleChangeSigungu={handleChangeSigungu}
+          handleClickSubmit={handleClickSubmit}
+          setSelected={setSelected}
+        />
+        <BoardMain cardItems={boardState.cards} pathname={pathname} />
+      </Grid>
+    </BoardContext.Provider>
   );
 }
 
