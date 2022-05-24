@@ -18,16 +18,24 @@ import BoardMain from "./BoardMain";
 import { withSidoOptionItems } from "../../recoil/sido";
 import { withIsLoggedIn } from "../../recoil/user";
 import { getRegion, getBasePathname, getTitle } from "../../apis";
-import { Items, Selected } from "../../common/types";
+import { Items, Selected, OptionItem } from "../../common/types";
 import { getInitItems, getInitSelected } from "../../common/data";
 import { CardProp } from "../Card";
 
 type CardItem = Omit<CardProp, "pathname">;
 type BoardState = { items: Items; selected: Selected; cards: CardItem[] };
-type BoardAction = { type: "" };
+type BoardAction =
+  | { type: "INIT_SIGUNGU"; payload: OptionItem[] }
+  | { type: "INIT_CARD"; payload: CardItem[] };
 
 function boardReducer(state: BoardState, action: BoardAction): BoardState {
   switch (action.type) {
+    case "INIT_CARD": {
+      return { ...state, cards: action.payload };
+    }
+    case "INIT_SIGUNGU": {
+      return { ...state, items: { ...state.items, sigungu: action.payload } };
+    }
     default:
       return state;
   }
@@ -73,7 +81,7 @@ function Board() {
         }));
         items.sort((a, b) => a.text.charCodeAt(0) - b.text.charCodeAt(0));
 
-        setItems((prev) => ({ ...prev, sigungu: items }));
+        boardDispatch({ type: "INIT_SIGUNGU", payload: items });
       } catch (error) {
         console.error(error);
       }
@@ -88,7 +96,7 @@ function Board() {
           `${pathname}/board/initCard`,
           selected
         );
-        setCardItems((prev) => [...prev, ...data]);
+        boardDispatch({ type: "INIT_CARD", payload: data });
       } catch (error) {
         console.error(error);
       }
