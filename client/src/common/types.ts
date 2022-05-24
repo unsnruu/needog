@@ -6,11 +6,22 @@ export interface RegCode {
   code: string;
 }
 
-export type OptionItem = { key: string; text: string; disabled?: boolean };
-
 export type HandleChangeSelect = React.ChangeEvent<HTMLSelectElement>;
 
 export interface SearchState {
   selected: string | null;
   items: OptionItem[];
 }
+
+export interface Selected {
+  pet: null | string;
+  sido: null | string;
+  sigungu: null | string;
+}
+export interface Items {
+  pet: OptionItem[];
+  sido: OptionItem[];
+  sigungu: OptionItem[];
+}
+
+export type OptionItem = { key: string; text: string; disabled?: boolean };
