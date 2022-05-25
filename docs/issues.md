@@ -19,6 +19,7 @@
 - [✅ 005: axios의 ReturnType 설정하기 ](#✅-issue-005-axios의-return-type-설정하기)
 - [✅ 006: tiptap의 자료구조를 json형태로 mysql 서버에 저장하는데 실패](#✅-issue-006-tiptap의-자료구조를-json형태로-mysql-서버에-저장하는데-실패하는-문제)
 - [✅ 007: tiptap의 content 수정이 안되는 문제](#✅-issue-007-tiptap의-configuration에서-content-옵션을-수정하기)
+- [❌ 008: Dependent한 데이터를 관리하기](./issues/issue8.md)
 
 ---
 
@@ -149,3 +150,7 @@ function PostInner({ content }: { content: Content }) {
 
 - https://tiptap.dev/guide/output#listening-for-changes
 - https://tiptap.dev/api/events
+
+## ❌ 008: Dependent한 데이터를 관리하기
+
+자세한 내용은 [이곳](./issues/issue8.md)을 참고해 주세요
