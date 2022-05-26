@@ -19,28 +19,35 @@ const initSigunguEffect: AtomEffect<SigunguAtom> = ({
 
   setSelf(newSigungu);
 };
-
+const trimRawItems = ({ key, text }: OptionItem) => ({
+  key,
+  text: text.split(" ").slice(1).join(" "),
+});
 const fetchSigunguEffect: AtomEffect<SigunguAtom> = ({
   node,
   getLoadable,
   setSelf,
   trigger,
 }) => {
-  const getSigunguFromJuso = async (sidoCode: string) => {
-    const sigunguItmes = await getRegion(getSigunguQuery(sidoCode));
+  const getSigunguValueFromJuso = async (sidoCode: string) => {
+    const sigunguRawOptionItems = await getRegion(getSigunguQuery(sidoCode));
 
-    if (!sigunguItmes) return;
+    if (!sigunguRawOptionItems) return;
+    const sigunguOptionItems = sigunguRawOptionItems.map((item) =>
+      trimRawItems(item)
+    );
     const newState = {
       ...getLoadable(node).getValue(),
-      [sidoCode]: sigunguItmes,
+      [sidoCode]: sigunguOptionItems,
     };
+
     setSelf(newState);
   };
 
   if (trigger === "get") {
     const sigunguValue = getLoadable(node).getValue();
     const keys = Object.keys(sigunguValue);
-    keys.forEach(async (key) => getSigunguFromJuso(key));
+    keys.forEach(async (key) => getSigunguValueFromJuso(key));
   }
 };
 
@@ -51,21 +58,3 @@ const sigunguAtom = atom<SigunguAtom>({
 });
 
 export { sigunguAtom };
-
-// const initialSigungu = {
-//   "1100000000": [],
-//   "2600000000": [],
-//   "2800000000": [],
-//   "2900000000": [],
-//   "3000000000": [],
-//   "3100000000": [],
-//   "4100000000": [],
-//   "4200000000": [],
-//   "4300000000": [],
-//   "4400000000": [],
-//   "4500000000": [],
-//   "4600000000": [],
-//   "4700000000": [],
-//   "4800000000": [],
-//   "5000000000": [],
-// };
