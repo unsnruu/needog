@@ -33,15 +33,24 @@ export default function SearchForm({
         alignItems={"center"}
       >
         <Grid item xs={12} md={3} container>
-          <Select name="pet" optionItems={defaultPetItem} />
+          <Select
+            name="pet"
+            optionItems={defaultPetItem}
+            handleChange={createChangeHandler("pet")}
+          />
         </Grid>
         <Grid item xs={12} md={3} container>
-          <Select name="sido" optionItems={defaultSidoItem} />
+          <Select
+            name="sido"
+            optionItems={defaultSidoItem}
+            handleChange={createChangeHandler("sido")}
+          />
         </Grid>
         <Grid item xs={12} md={3} container>
           <Select
             name="sigungu"
             optionItems={selectedSido ? defaultSigunguItem[selectedSido] : null}
+            handleChange={createChangeHandler("sigungu")}
           />
         </Grid>
         <Grid item xs={12} md={3} sx={{ height: "3rem" }}>
