@@ -10,20 +10,19 @@ import sigunguAtom from "./../recoil/sigungu";
 import { Items, Selected } from "../common/types";
 
 interface SearchFormProps {
+  selectedSido: null | string;
   createChangeHandler: (selected: string) => (event: SelectChangeEvent) => void;
 }
 
-export default function SearchForm({ createChangeHandler }: SearchFormProps) {
-  //default data를 recoil을 사용해서 가져오기
+export default function SearchForm({
+  createChangeHandler,
+  selectedSido,
+}: SearchFormProps) {
+  //default items를 recoil을 사용해서 가져오기
   //UI를 렌더링하는 용도로만 사용되므로 Board에서 관리할 필요 없다.
-  const defaultPet = useRecoilValue(petAtom);
-  const defaultSido = useRecoilValue(sidoAtom);
-  const defaultSigungu = useRecoilValue(sigunguAtom);
-  const [items, setItems] = useState({
-    pet: defaultPet,
-    sido: defaultSido,
-    sigungu: defaultSigungu,
-  });
+  const defaultPetItem = useRecoilValue(petAtom);
+  const defaultSidoItem = useRecoilValue(sidoAtom);
+  const defaultSigunguItem = useRecoilValue(sigunguAtom);
 
   return (
     <Grid item xs={10} container role="form">
@@ -34,24 +33,15 @@ export default function SearchForm({ createChangeHandler }: SearchFormProps) {
         alignItems={"center"}
       >
         <Grid item xs={12} md={3} container>
-          <Select
-            name="pet"
-            optionItems={items.pet}
-            handleChange={handleChange("pet")}
-          />
+          <Select name="pet" optionItems={defaultPetItem} />
         </Grid>
         <Grid item xs={12} md={3} container>
-          <Select
-            name="sido"
-            optionItems={items.sido}
-            handleChange={handleChange("sido")}
-          />
+          <Select name="sido" optionItems={defaultSidoItem} />
         </Grid>
         <Grid item xs={12} md={3} container>
           <Select
             name="sigungu"
-            optionItems={items.sigungu}
-            handleChange={handleChange("sigungu")}
+            optionItems={selectedSido ? defaultSigunguItem[selectedSido] : null}
           />
         </Grid>
         <Grid item xs={12} md={3} sx={{ height: "3rem" }}>
