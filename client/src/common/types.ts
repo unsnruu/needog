@@ -1,3 +1,5 @@
+import { CardProp } from "../components/Card";
+
 export interface RegCodes {
   regcodes: RegCode[];
 }
@@ -8,20 +10,18 @@ export interface RegCode {
 
 export type HandleChangeSelect = React.ChangeEvent<HTMLSelectElement>;
 
-export interface SearchState {
-  selected: string | null;
-  items: OptionItem[];
-}
-
 export interface Selected {
-  pet: null | string;
-  sido: null | string;
-  sigungu: null | string;
+  pet: string;
+  sido: string;
+  sigungu: string;
 }
 export interface Items {
   pet: OptionItem[];
   sido: OptionItem[];
   sigungu: OptionItem[];
 }
+export type SearchKey = "pet" | "sido" | "sigungu";
 
 export type OptionItem = { key: string; text: string; disabled?: boolean };
+
+export type CardItem = Omit<CardProp, "pathname">;
