@@ -34,6 +34,7 @@ export default function SearchForm({
       >
         <Grid item xs={12} md={3} container>
           <Select
+            label="반려 동물"
             optionItems={PetItem}
             handleChange={createChangeHandler("pet")}
             selected={selected.pet}
@@ -41,6 +42,7 @@ export default function SearchForm({
         </Grid>
         <Grid item xs={12} md={3} container>
           <Select
+            label="시/도"
             optionItems={SidoItem}
             handleChange={createChangeHandler("sido")}
             selected={selected.sido}
@@ -48,6 +50,7 @@ export default function SearchForm({
         </Grid>
         <Grid item xs={12} md={3} container>
           <Select
+            label="시/군/구"
             optionItems={selected.sido ? SigunguItem[selected.sido] : null}
             handleChange={createChangeHandler("sigungu")}
             selected={selected.sigungu}

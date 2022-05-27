@@ -9,12 +9,13 @@ import {
 import { OptionItem } from "../common/types";
 
 type SelectProps = {
+  label: string;
   optionItems: OptionItem[] | null;
-  handleChange: (event: SelectChangeEvent) => void;
   selected: string;
+  handleChange: (event: SelectChangeEvent) => void;
 };
 
-function Select({ selected, optionItems, handleChange }: SelectProps) {
+function Select({ label, selected, optionItems, handleChange }: SelectProps) {
   if (!optionItems) return null;
 
   return (
@@ -24,7 +25,7 @@ function Select({ selected, optionItems, handleChange }: SelectProps) {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={selected}
-        label="Age"
+        label={label}
         onChange={handleChange}
       >
         <MenuItem value={10}>Ten</MenuItem>
