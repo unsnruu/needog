@@ -1,12 +1,12 @@
 import React from "react";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 
 export interface CardProp {
   id: number;
   title: string;
   author: string;
-  baseUrl: string;
+  pathname: string;
 }
 
 const CardWrapper = styled.div`
@@ -23,10 +23,10 @@ const CardWrapper = styled.div`
   }
 `;
 
-function Card({ id, author, title, baseUrl }: CardProp) {
+function Card({ id, author, title, pathname }: CardProp) {
   return (
     <CardWrapper>
-      <Link to={`/${baseUrl}/post/${id}`} style={{ backgroundColor: "white" }}>
+      <Link to={`/${pathname}/post/${id}`} style={{ backgroundColor: "white" }}>
         <img alt="이미지"></img>
       </Link>
       <h3>{title}</h3>
