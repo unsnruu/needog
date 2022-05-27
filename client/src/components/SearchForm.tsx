@@ -7,23 +7,28 @@ import petAtom from "./../recoil/pet";
 import sidoAtom from "./../recoil/sido";
 import sigunguAtom from "./../recoil/sigungu";
 
-import { Selected } from "../common/types";
+import { SearchKey, Selected } from "../common/types";
 
 interface SearchFormProps {
   selected: Selected;
-  createChangeHandler: (selected: string) => (event: SelectChangeEvent) => void;
+  handleChangePet: (event: SelectChangeEvent) => void;
+  handleChangeSido: (event: SelectChangeEvent) => void;
+  handleChangeSigungu: (event: SelectChangeEvent) => void;
 }
 
 export default function SearchForm({
-  createChangeHandler,
   selected,
+  handleChangePet,
+  handleChangeSido,
+  handleChangeSigungu,
 }: SearchFormProps) {
   //default items를 recoil을 사용해서 가져오기
   //UI를 렌더링하는 용도로만 사용되므로 Board에서 관리할 필요 없다.
-  const PetItem = useRecoilValue(petAtom);
-  const SidoItem = useRecoilValue(sidoAtom);
-  const SigunguItem = useRecoilValue(sigunguAtom);
+  const petItem = useRecoilValue(petAtom);
+  const sidoItem = useRecoilValue(sidoAtom);
+  const sigunguItem = useRecoilValue(sigunguAtom);
 
+  //sido를 셀렉트 하면, sigungu가 초기화 되게끔 수정해야 한다.
   return (
     <Grid item xs={10} container role="form">
       <Grid
@@ -34,26 +39,26 @@ export default function SearchForm({
       >
         <Grid item xs={12} md={3} container>
           <Select
-            label="반려 동물"
-            optionItems={PetItem}
-            handleChange={createChangeHandler("pet")}
+            id="pet"
             selected={selected.pet}
+            optionItems={petItem}
+            handleChange={handleChangePet}
           />
         </Grid>
         <Grid item xs={12} md={3} container>
           <Select
-            label="시/도"
-            optionItems={SidoItem}
-            handleChange={createChangeHandler("sido")}
+            id="sido"
             selected={selected.sido}
+            optionItems={sidoItem}
+            handleChange={handleChangeSido}
           />
         </Grid>
         <Grid item xs={12} md={3} container>
           <Select
-            label="시/군/구"
-            optionItems={selected.sido ? SigunguItem[selected.sido] : null}
-            handleChange={createChangeHandler("sigungu")}
+            id="sigungu"
             selected={selected.sigungu}
+            optionItems={sigunguItem[selected.sido]}
+            handleChange={handleChangeSigungu}
           />
         </Grid>
         <Grid item xs={12} md={3} sx={{ height: "3rem" }}>

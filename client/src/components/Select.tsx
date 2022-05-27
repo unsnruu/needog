@@ -22,11 +22,11 @@ export default function Select({
   handleChange,
 }: SelectProps) {
   if (!optionItems) return null;
-
+  console.log("render on Select");
   return (
     <FormControl fullWidth>
       <InputLabel id={`select-label-${id}`}>
-        ${getKoreanAliasById(id)}
+        {getKoreanAliasById(id)}
       </InputLabel>
       <MuiSelect
         labelId={`select-label-${id}`}
@@ -36,7 +36,7 @@ export default function Select({
         onChange={handleChange}
       >
         {optionItems.map(({ key, text, disabled }) => (
-          <MenuItem key={key} disabled={disabled ? true : false}>
+          <MenuItem key={key} disabled={disabled ? true : false} value={key}>
             {text}
           </MenuItem>
         ))}

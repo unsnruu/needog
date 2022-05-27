@@ -7,26 +7,35 @@ import SearchForm from "../SearchForm";
 import BoardMain from "./BoardMain";
 import { Grid, SelectChangeEvent } from "@mui/material";
 
-import { Selected } from "../../common/types";
+import { Selected, SearchKey } from "../../common/types";
 
 function Board() {
   //<SearchFrom>의 changeEvnet에 따라 변경되는 값을 추적하기 위해 local state 사용
   const [selected, setSelected] = useState<Selected>({
-    pet: null,
-    sido: null,
-    sigungu: null,
+    pet: "",
+    sido: "",
+    sigungu: "",
   });
 
-  const createChangedHandler =
-    (selected: string) => (event: SelectChangeEvent) => {
-      setSelected((prev) => ({ ...prev, [selected]: event.target.value }));
-    };
-
+  const handleChangePet = (event: SelectChangeEvent) => {
+    setSelected((prev) => ({ ...prev, pet: event.target.value }));
+  };
+  const handleChangeSido = (event: SelectChangeEvent) => {
+    setSelected((prev) => ({ ...prev, sido: event.target.value, sigungu: "" }));
+  };
+  const handleChangeSigungu = (event: SelectChangeEvent) => {
+    setSelected((prev) => ({ ...prev, sigungu: event.target.value }));
+  };
   return (
     <Grid container justifyContent={"center"}>
-      <BoardHeading />
-      <SearchForm createChangeHandler={createChangedHandler} />
-      <BoardMain />
+      {/* <BoardHeading /> */}
+      <SearchForm
+        selected={selected}
+        handleChangePet={handleChangePet}
+        handleChangeSido={handleChangeSido}
+        handleChangeSigungu={handleChangeSigungu}
+      />
+      {/* <BoardMain /> */}
     </Grid>
   );
 }
