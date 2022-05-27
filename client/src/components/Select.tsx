@@ -25,12 +25,14 @@ export default function Select({
 
   return (
     <FormControl fullWidth>
-      <InputLabel id={`select-label-${id}`}>${getAliasById(id)}</InputLabel>
+      <InputLabel id={`select-label-${id}`}>
+        ${getKoreanAliasById(id)}
+      </InputLabel>
       <MuiSelect
         labelId={`select-label-${id}`}
         id={`select-${id}`}
         value={selected}
-        label={getAliasById(id)}
+        label={getKoreanAliasById(id)}
         onChange={handleChange}
       >
         {optionItems.map(({ key, text, disabled }) => (
@@ -43,7 +45,7 @@ export default function Select({
   );
 }
 
-function getAliasById(id: "pet" | "sido" | "sigungu") {
+function getKoreanAliasById(id: "pet" | "sido" | "sigungu") {
   switch (id) {
     case "pet":
       return "반려 동물";
