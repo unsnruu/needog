@@ -1,15 +1,13 @@
 import getRegion from "./getRegion";
-import useRegion from "./useRegion";
-import useSearch from "./useSearch";
 import deepCloneObject from "./deepCloneObject";
 import { getBasePathname } from "./getBasePathname";
 import { getSigunguQuery } from "./getSigunguQuery";
+import getTitle from "./getTitle";
 
 export {
   getRegion,
-  useRegion,
-  useSearch,
   deepCloneObject,
   getBasePathname,
   getSigunguQuery,
+  getTitle,
 };
