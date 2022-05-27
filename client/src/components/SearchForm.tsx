@@ -7,22 +7,22 @@ import petAtom from "./../recoil/pet";
 import sidoAtom from "./../recoil/sido";
 import sigunguAtom from "./../recoil/sigungu";
 
-import { Items, Selected } from "../common/types";
+import { Selected } from "../common/types";
 
 interface SearchFormProps {
-  selectedSido: null | string;
+  selected: Selected;
   createChangeHandler: (selected: string) => (event: SelectChangeEvent) => void;
 }
 
 export default function SearchForm({
   createChangeHandler,
-  selectedSido,
+  selected,
 }: SearchFormProps) {
   //default items를 recoil을 사용해서 가져오기
   //UI를 렌더링하는 용도로만 사용되므로 Board에서 관리할 필요 없다.
-  const defaultPetItem = useRecoilValue(petAtom);
-  const defaultSidoItem = useRecoilValue(sidoAtom);
-  const defaultSigunguItem = useRecoilValue(sigunguAtom);
+  const PetItem = useRecoilValue(petAtom);
+  const SidoItem = useRecoilValue(sidoAtom);
+  const SigunguItem = useRecoilValue(sigunguAtom);
 
   return (
     <Grid item xs={10} container role="form">
@@ -34,23 +34,23 @@ export default function SearchForm({
       >
         <Grid item xs={12} md={3} container>
           <Select
-            name="pet"
-            optionItems={defaultPetItem}
+            optionItems={PetItem}
             handleChange={createChangeHandler("pet")}
+            selected={selected.pet}
           />
         </Grid>
         <Grid item xs={12} md={3} container>
           <Select
-            name="sido"
-            optionItems={defaultSidoItem}
+            optionItems={SidoItem}
             handleChange={createChangeHandler("sido")}
+            selected={selected.sido}
           />
         </Grid>
         <Grid item xs={12} md={3} container>
           <Select
-            name="sigungu"
-            optionItems={selectedSido ? defaultSigunguItem[selectedSido] : null}
+            optionItems={selected.sido ? SigunguItem[selected.sido] : null}
             handleChange={createChangeHandler("sigungu")}
+            selected={selected.sigungu}
           />
         </Grid>
         <Grid item xs={12} md={3} sx={{ height: "3rem" }}>
