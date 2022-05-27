@@ -6,34 +6,50 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-import { OptionItem } from "../common/types";
+import { SearchKey, OptionItem } from "../common/types";
 
 type SelectProps = {
-  label: string;
+  id: SearchKey;
   optionItems: OptionItem[] | null;
   selected: string;
   handleChange: (event: SelectChangeEvent) => void;
 };
 
-function Select({ label, selected, optionItems, handleChange }: SelectProps) {
+export default function Select({
+  id,
+  selected,
+  optionItems,
+  handleChange,
+}: SelectProps) {
   if (!optionItems) return null;
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Age</InputLabel>
+      <InputLabel id={`select-label-${id}`}>${getAliasById(id)}</InputLabel>
       <MuiSelect
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
+        labelId={`select-label-${id}`}
+        id={`select-${id}`}
         value={selected}
-        label={label}
+        label={getAliasById(id)}
         onChange={handleChange}
       >
-        <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem>
+        {optionItems.map(({ key, text, disabled }) => (
+          <MenuItem key={key} disabled={disabled ? true : false}>
+            {text}
+          </MenuItem>
+        ))}
       </MuiSelect>
     </FormControl>
   );
 }
 
-export default Select;
+function getAliasById(id: "pet" | "sido" | "sigungu") {
+  switch (id) {
+    case "pet":
+      return "반려 동물";
+    case "sido":
+      return "시/도";
+    case "sigungu":
+      return "시/군/구";
+  }
+}
