@@ -50,15 +50,19 @@ function Board() {
         handleChangeSigungu={handleChangeSigungu}
       />
       <BoardMain cardItems={cardItems} pathname={pathname} />
-      <FloatingActionButton />
+      <FloatingActionButton handleClickWrite={handleClickWrite} />
     </Grid>
   );
 }
 
 export default Board;
-//todo 액션 버튼 구현하기
 
-function FloatingActionButton() {
+//todo 액션 버튼 구현하기
+//todo 액션 버튼에 애니메이션 추가하면 좋을 듯
+interface FloatinActionButtonProps {
+  handleClickWrite: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+function FloatingActionButton({ handleClickWrite }: FloatinActionButtonProps) {
   return (
     <Grid
       sx={{
@@ -72,6 +76,7 @@ function FloatingActionButton() {
         aria-label="write"
         color="secondary"
         sx={{ width: "10rem", height: "4rem" }}
+        onClick={handleClickWrite}
       >
         <Create sx={{ mr: "1rem" }} />
         <Typography>작성하기</Typography>
