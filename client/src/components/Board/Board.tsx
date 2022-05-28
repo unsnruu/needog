@@ -5,8 +5,8 @@ import axios from "axios";
 import BoardHeading from "./BoardHeading";
 import SearchForm from "../SearchForm";
 import BoardMain from "./BoardMain";
-import { Grid, SelectChangeEvent } from "@mui/material";
-
+import { Grid, SelectChangeEvent, Fab, Typography } from "@mui/material";
+import { Create } from "@mui/icons-material";
 import { Selected, CardItem } from "../../common/types";
 
 function Board() {
@@ -38,6 +38,8 @@ function Board() {
     fetchCardItem();
   }, [pathname]);
 
+  const handleClickWrite = () => {};
+
   return (
     <Grid container justifyContent={"center"}>
       <BoardHeading pathname={pathname} />
@@ -48,8 +50,32 @@ function Board() {
         handleChangeSigungu={handleChangeSigungu}
       />
       <BoardMain cardItems={cardItems} pathname={pathname} />
+      <FloatingActionButton />
     </Grid>
   );
 }
 
 export default Board;
+//todo 액션 버튼 구현하기
+
+function FloatingActionButton() {
+  return (
+    <Grid
+      sx={{
+        position: "absolute",
+        right: "2rem",
+        bottom: "2rem",
+      }}
+    >
+      <Fab
+        variant="extended"
+        aria-label="write"
+        color="secondary"
+        sx={{ width: "10rem", height: "4rem" }}
+      >
+        <Create sx={{ mr: "1rem" }} />
+        <Typography>작성하기</Typography>
+      </Fab>
+    </Grid>
+  );
+}
