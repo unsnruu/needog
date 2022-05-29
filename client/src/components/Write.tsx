@@ -1,26 +1,11 @@
+//Packages
 import React, { useState } from "react";
-
+// Components
 import { Grid, SelectChangeEvent } from "@mui/material";
-import SearchForm from "./SearchForm";
-
+import Tiptap from "./Tiptap";
+import WriteForm from "./Write/WriteForm";
+//Misc
 import { Selected } from "../common/types";
-
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import styled from "@emotion/styled";
-
-const StyledEditorContent = styled(EditorContent)`
-  outline: 1px solid black;
-`;
-
-function Tiptap() {
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: "<h1>Hello World!</h1>",
-  });
-
-  return <StyledEditorContent editor={editor} />;
-}
 
 function Write() {
   //<SearchFrom>의 changeEvnet에 따라 변경되는 값을 추적하기 위해 local state 사용
@@ -29,7 +14,7 @@ function Write() {
     sido: "",
     sigungu: "",
   });
-  //sigungu가 sido에 의존적이기 때문에 이벤트 함수를 일일이 만들었음.
+  //sigungu가 sido에 의존적이기 때문에 고차 함수가 아니라 이벤트 함수를 일일이 만들었음.
   const handleChangePet = (event: SelectChangeEvent) => {
     setSelected((prev) => ({ ...prev, pet: event.target.value }));
   };
@@ -43,7 +28,7 @@ function Write() {
   return (
     <Grid>
       <div>Heading</div>
-      <SearchForm
+      <WriteForm
         selected={selected}
         handleChangePet={handleChangePet}
         handleChangeSido={handleChangeSido}
