@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import axios from "axios";
 
@@ -10,7 +11,6 @@ import { Grid } from "@mui/material";
 import {
   FormatBold,
   FormatItalic,
-  FormatUnderlined,
   StrikethroughS,
   FormatSize,
   FormatListBulleted,
@@ -28,7 +28,11 @@ export default function Tiptap() {
   const [file, setFile] = useState<File | null>(null);
 
   const editor = useEditor({
-    extensions: [StarterKit, Image],
+    extensions: [
+      StarterKit,
+      Image,
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
+    ],
     content: "<h1>Hello World!</h1>",
   });
 
@@ -69,26 +73,52 @@ function TiptapMenubar({ editor }: TiptapMenubarProps) {
     }
   };
   return (
-    <>
-      <FormatBold onClick={() => editor.chain().focus().toggleBold().run()} />
-      <FormatItalic />
-      <FormatUnderlined />
-      <StrikethroughS />
-      <FormatSize />
-      <FormatListBulleted />
-      <FormatAlignLeft />
-      <FormatAlignCenter />
-      <FormatAlignRight />
-      <label htmlFor="hello-world" style={{ cursor: "pointer" }}>
-        <AddAPhoto />
-        <input
-          type="file"
-          id="hello-world"
-          style={{ display: "none" }}
-          onChange={handleChangeFile}
+    <Grid>
+      <Grid>
+        <FormatBold onClick={() => editor.chain().focus().toggleBold().run()} />
+        <FormatItalic
+          onClick={() => editor.chain().focus().toggleItalic().run()}
         />
-      </label>
-    </>
+        <StrikethroughS
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+        />
+      </Grid>
+
+      <Grid>
+        <FormatAlignLeft
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+        />
+        <FormatAlignCenter
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+        />
+        <FormatAlignRight
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+        />
+      </Grid>
+      <Grid>
+        <FormatSize
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+        />
+      </Grid>
+      <Grid>
+        <FormatListBulleted
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+        />
+      </Grid>
+      <Grid>
+        <label htmlFor="hello-world" style={{ cursor: "pointer" }}>
+          <AddAPhoto />
+          <input
+            type="file"
+            id="hello-world"
+            style={{ display: "none" }}
+            onChange={handleChangeFile}
+          />
+        </label>
+      </Grid>
+    </Grid>
   );
 }
 
