@@ -32,6 +32,19 @@ export default function Tiptap() {
     content: "<h1>Hello World!</h1>",
   });
 
+  return (
+    <Grid>
+      <TiptapMenubar editor={editor} />
+      <StyledEditorContent editor={editor} />
+    </Grid>
+  );
+}
+
+interface TiptapMenubarProps {
+  editor: Editor | null;
+}
+function TiptapMenubar({ editor }: TiptapMenubarProps) {
+  if (!editor) return null;
   const handleChangeFile = async ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,14 +61,24 @@ export default function Tiptap() {
           }
         );
         const { url } = data;
-        console.log(url);
+
+        editor.commands.setImage({ src: `http://localhost:8000/post${url}` });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
-    <Grid>
-      <TiptapMenubar editor={editor} />
-      <StyledEditorContent editor={editor} />
+    <>
+      <FormatBold onClick={() => editor.chain().focus().toggleBold().run()} />
+      <FormatItalic />
+      <FormatUnderlined />
+      <StrikethroughS />
+      <FormatSize />
+      <FormatListBulleted />
+      <FormatAlignLeft />
+      <FormatAlignCenter />
+      <FormatAlignRight />
       <label htmlFor="hello-world" style={{ cursor: "pointer" }}>
         <AddAPhoto />
         <input
@@ -65,27 +88,6 @@ export default function Tiptap() {
           onChange={handleChangeFile}
         />
       </label>
-    </Grid>
-  );
-}
-
-interface TiptapMenubarProps {
-  editor: Editor | null;
-}
-function TiptapMenubar({ editor }: TiptapMenubarProps) {
-  if (!editor) return null;
-
-  return (
-    <>
-      <FormatBold />
-      <FormatItalic />
-      <FormatUnderlined />
-      <StrikethroughS />
-      <FormatSize />
-      <FormatListBulleted />
-      <FormatAlignLeft />
-      <FormatAlignCenter />
-      <FormatAlignRight />
     </>
   );
 }
