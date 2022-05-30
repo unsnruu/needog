@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -32,15 +32,39 @@ export default function Tiptap() {
     content: "<h1>Hello World!</h1>",
   });
 
+  const handleChangeFile = async ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (target.files) {
+        const formData = new FormData();
+        formData.append("img", target.files[0]);
+
+        const { data } = await axios.post<{ url: string }>(
+          "/post/img",
+          formData,
+          {
+            withCredentials: true,
+          }
+        );
+        const { url } = data;
+        console.log(url);
+      }
+    } catch (error) {}
+  };
   return (
     <Grid>
       <TiptapMenubar editor={editor} />
       <StyledEditorContent editor={editor} />
-      <AddAPhoto
-        onClick={() => {
-          console.log("clicked");
-        }}
-      />
+      <label htmlFor="hello-world" style={{ cursor: "pointer" }}>
+        <AddAPhoto />
+        <input
+          type="file"
+          id="hello-world"
+          style={{ display: "none" }}
+          onChange={handleChangeFile}
+        />
+      </label>
     </Grid>
   );
 }
