@@ -1,28 +1,65 @@
+//todo
+//[ ] 비밂번호 확인과 비밀번호가 일치하지 않을 경우 경고 발생하게 만들기
+
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import { Grid, Typography, TextField, Button, Snackbar } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Snackbar,
+  Alert,
+  AlertTitle,
+  SxProps,
+  Theme,
+} from "@mui/material";
 
+interface UserInfo {
+  userId: string;
+  password: string;
+  nickname: string;
+}
+type IsAllFillInReturn = ["SUCCESS", null] | ["FAIL", string];
+const isAllFilledIn = ({
+  userId,
+  password,
+  nickname,
+}: UserInfo): IsAllFillInReturn => {
+  if (userId !== "" && password !== "" && nickname !== "") {
+    return ["SUCCESS", null];
+  }
+  return ["FAIL", "비어있는 칸이 있습니다."];
+};
 function SignUp() {
-  const [newUser, setNewUser] = useState({ userId: "", pwd: "", nickname: "" });
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    userId: "",
+    password: "",
+    nickname: "",
+  });
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleClickSubmit = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    event.preventDefault();
     try {
-      await axios.post("/auth/signup", { ...newUser });
-    } catch (err) {
-      setOpen(true);
-    } finally {
+      console.log(userInfo);
+      const [result, message] = isAllFilledIn(userInfo);
+      if (result === "FAIL") {
+        throw new Error(message);
+      }
+      await axios.post("/auth/signup", { ...userInfo });
       navigate("/", { replace: true });
+    } catch (error) {
+      setOpen(true);
     }
   };
+
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    setNewUser((prev) => {
+    setUserInfo((prev) => {
       return { ...prev, [target.id]: target.value };
     });
   };
@@ -48,49 +85,48 @@ function SignUp() {
           </Button>
         </Grid>
       </Grid>
-      <Snackbar open={open} />
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert severity="error" onClose={handleClose}>
+          <AlertTitle>회원 가입 실패</AlertTitle>
+        </Alert>
+      </Snackbar>
     </>
   );
 }
 
 export { SignUp };
 
-//todo
-// 비밂번호 확인과 비밀번호가 일치하지 않을 경우 경고 발생하게 만들기
-
 interface SigunUpFormProps {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
+interface TextFieldItem {
+  id: string;
+  label: string;
+  type: "text" | "password";
+}
 function SignUpForm({ handleChange }: SigunUpFormProps) {
+  const textFieldStyle: SxProps<Theme> = {
+    marginBottom: "1rem",
+  };
+  const textfieldItems: TextFieldItem[] = [
+    { id: "userId", label: "아이디", type: "text" },
+    { id: "nickname", label: "닉네임", type: "text" },
+    { id: "password", label: "비밀번호", type: "password" },
+    { id: "re-password", label: "비밀번호 확인", type: "password" },
+  ];
   return (
     <Grid item container justifyContent={"center"}>
-      <Grid item xs={12} md={5}>
-        <TextField
-          id="userId"
-          label="아이디"
-          onChange={handleChange}
-          fullWidth
-        />
-      </Grid>
-      <Grid item xs={12} md={5}>
-        <TextField
-          id="nickname"
-          label="닉네임"
-          onChange={handleChange}
-          fullWidth
-        />
-      </Grid>
-      <Grid item xs={12} md={5}>
-        <TextField
-          id="pwd"
-          label="비밀번호"
-          onChange={handleChange}
-          fullWidth
-        />
-      </Grid>
-      <Grid item xs={12} md={5}>
-        <TextField label="비밀번호 확인" fullWidth />
-      </Grid>
+      {textfieldItems.map(({ id, label, type }) => (
+        <Grid key={`${id}-grid`} item xs={12} md={8} sx={textFieldStyle}>
+          <TextField
+            id={id}
+            label={label}
+            type={type}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+      ))}
     </Grid>
   );
 }
