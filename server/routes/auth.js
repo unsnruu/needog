@@ -6,16 +6,14 @@ const { findUser, createUser } = require("../database/sql");
 const router = express.Router();
 
 router.post("/signup", isNotLoggedIn, async (req, res, next) => {
-  const { userId, nickname, pwd } = req.body;
+  const { userId, nickname, password } = req.body;
 
   try {
     const exUser = await findUser({ userId });
 
-    if (exUser) {
-      return res.status(404).send();
-    }
+    if (exUser) return res.status(404).send();
 
-    const hash = await bcrypt.hash(pwd, 12);
+    const hash = await bcrypt.hash(password, 12);
     await createUser({ userId, nickname, password: hash });
     res.send("success");
   } catch (error) {
