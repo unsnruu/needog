@@ -11,12 +11,12 @@ import { Home } from "./Pages/Home/Home";
 import { NotFound } from "./Pages/404";
 import Adoption from "./Pages/Adoption/Adoption";
 import Missing from "./Pages/Missing";
-import Board from "./components/Board";
+import Board from "./components/Board/Board";
 import Write from "./components/Write";
 import { Care } from "./Pages/Care";
 import { Community } from "./Pages/Community";
 import { LogIn } from "./Pages/LogIn";
-import { SignUp } from "./Pages/SignUp";
+import SignUp from "./Pages/SignUp/SignUp";
 import { Post } from "./components/Post";
 
 function App() {
@@ -43,7 +43,6 @@ function App() {
 
   return (
     <>
-      <Header />
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="adoption" element={<Adoption />}>

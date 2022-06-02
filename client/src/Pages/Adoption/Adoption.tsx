@@ -1,9 +1,10 @@
 import { Outlet } from "react-router-dom";
+import Header from "../../components/Header";
 
 export default function Adoption() {
   return (
     <>
-      <div data-testid="hi">sample</div>
+      <Header />
       <Outlet />
     </>
   );

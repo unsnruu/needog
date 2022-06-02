@@ -34,10 +34,10 @@ function LogIn() {
       const { nickname, snsId, userId } = data;
 
       setUser((prev) => ({ ...prev, nickname, userId, snsId }));
+      navigate("/", { replace: true });
     } catch (err) {
       console.log("로그인에 실패하셨습니다.");
     } finally {
-      navigate("/", { replace: true });
     }
   };
 
@@ -47,21 +47,43 @@ function LogIn() {
   };
 
   return (
-    <Grid container>
-      <Grid item>
-        <TextField label="아이디" id="form-username" onChange={handleChange} />
+    <Grid container justifyContent={"center"}>
+      <Grid item xs={12}>
+        HOME
       </Grid>
-      <Grid item>
-        <TextField
-          label="비밀번호"
-          id="form-password"
-          type="password"
-          onChange={handleChange}
-        />
+      <Grid item xs={8} container>
+        <Grid item xs={12}>
+          <TextField
+            label="아이디"
+            id="form-username"
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="비밀번호"
+            id="form-password"
+            type="password"
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} container sx={{ visibility: "hidden" }}>
+          <Typography>아이디와 비밀번호를 확인해주세요</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            type="submit"
+            onClick={handleClickSumbit}
+            fullWidth
+          >
+            로그인
+          </Button>
+        </Grid>
       </Grid>
-      <Button variant="contained" type="submit" onClick={handleClickSumbit}>
-        로그인
-      </Button>
+
       <Grid item container>
         <Grid item>
           <Link to="/signup">
