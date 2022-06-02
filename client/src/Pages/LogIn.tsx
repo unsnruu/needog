@@ -15,7 +15,7 @@ interface AxiosReturnLogin {
 }
 const getKeyByTargetId = (id: string) => id.split("-")[1];
 function LogIn() {
-  const [form, setForm] = useState({ id: "", pwd: "" });
+  const [authInfo, setAuthInfo] = useState({ username: "", password: "" });
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userAtom);
 
@@ -24,11 +24,15 @@ function LogIn() {
   ) => {
     event.preventDefault();
     try {
-      const { data } = await axios.post<AxiosReturnLogin>("/auth/login", form, {
-        withCredentials: true,
-      });
+      const { data } = await axios.post<AxiosReturnLogin>(
+        "/auth/login",
+        authInfo,
+        {
+          withCredentials: true,
+        }
+      );
       const { nickname, snsId, userId } = data;
-      console.log(data);
+
       setUser((prev) => ({ ...prev, nickname, userId, snsId }));
     } catch (err) {
       console.log("로그인에 실패하셨습니다.");
@@ -39,18 +43,21 @@ function LogIn() {
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const key = getKeyByTargetId(target.id);
-    setForm((prev) => {
-      return { ...prev, [key]: target.value };
-    });
+    setAuthInfo((prev) => ({ ...prev, [key]: target.value }));
   };
 
   return (
     <Grid container>
       <Grid item>
-        <TextField label="아이디" />
+        <TextField label="아이디" id="form-username" onChange={handleChange} />
       </Grid>
       <Grid item>
-        <TextField label="비밀번호" />
+        <TextField
+          label="비밀번호"
+          id="form-password"
+          type="password"
+          onChange={handleChange}
+        />
       </Grid>
       <Button variant="contained" type="submit" onClick={handleClickSumbit}>
         로그인
