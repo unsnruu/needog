@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
+import { Grid, TextField, Button, Typography } from "@mui/material";
+
 import userAtom from "../recoil/user";
 
 interface AxiosReturnLogin {
@@ -11,19 +13,21 @@ interface AxiosReturnLogin {
   userId: string;
   snsId: string;
 }
-
+const getKeyByTargetId = (id: string) => id.split("-")[1];
 function LogIn() {
   const [form, setForm] = useState({ id: "", pwd: "" });
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userAtom);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleClickSumbit = async (
+    event: React.FormEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     try {
       const { data } = await axios.post<AxiosReturnLogin>("/auth/login", form, {
         withCredentials: true,
       });
-      const { email, nickname, snsId, userId } = data;
+      const { nickname, snsId, userId } = data;
       console.log(data);
       setUser((prev) => ({ ...prev, nickname, userId, snsId }));
     } catch (err) {
@@ -34,31 +38,37 @@ function LogIn() {
   };
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const key = getKeyByTargetId(target.id);
     setForm((prev) => {
-      return { ...prev, [target.id]: target.value };
+      return { ...prev, [key]: target.value };
     });
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="id">아이디</label>
-        <input type="text" id="id" onChange={handleChange} value={form.id} />
-        <label htmlFor="password">비밀번호</label>
-        <input
-          type="password"
-          id="pwd"
-          onChange={handleChange}
-          value={form.pwd}
-        />
-        <button type="submit">로그인</button>
-      </form>
-      <div>
-        <Link to="/signup">회원 가입</Link>
-        <span>아이디 찾기</span>
-        <span>비밀번호 찾기</span>
-      </div>
-    </div>
+    <Grid container>
+      <Grid item>
+        <TextField label="아이디" />
+      </Grid>
+      <Grid item>
+        <TextField label="비밀번호" />
+      </Grid>
+      <Button variant="contained" type="submit" onClick={handleClickSumbit}>
+        로그인
+      </Button>
+      <Grid item container>
+        <Grid item>
+          <Link to="/signup">
+            <Typography>회원 가입</Typography>
+          </Link>
+        </Grid>
+        <Grid item>
+          <Typography>아이디 찾기</Typography>
+        </Grid>
+        <Grid item>
+          <Typography>비밀번호 찾기</Typography>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
