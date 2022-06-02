@@ -14,56 +14,66 @@ import {
   AlertTitle,
 } from "@mui/material";
 import SignUpForm from "./SignUpForm";
-
-import { UserInfo } from "./types";
+import { UserInfoKeys, UserInfoState, DisplayState } from "./types";
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState<UserInfo>({
+  //local states
+  const [userInfo, setUserInfo] = useState<UserInfoState>({
     username: "",
     password: "",
     passwordConfirm: "",
     nickname: "",
   });
+
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 
-  const isEmptyString = (value: string) => (value === "" ? true : false);
-  const isAllFilledIn = (userInfo: UserInfo): boolean => {
-    const keys = Object.keys(userInfo) as Array<keyof UserInfo>;
-    for (let key of keys) {
-      if (isEmptyString(userInfo[key])) return false;
-    }
-    return true;
-  };
-  const isSamePassword = () => {
-    if (userInfo.password === userInfo.passwordConfirm) return true;
-    else return false;
+  const checkers = {
+    isSamePassword() {
+      if (userInfo.password === userInfo.passwordConfirm) return true;
+      else return false;
+    },
+    isIncludingSpecialCh(str: string) {
+      return str.match(/[^\w]/) ? true : false;
+    },
+    isEmptyString(value: string) {
+      return value === "" ? true : false;
+    },
+    isAllFilledIn(userInfo: UserInfoState) {
+      const keys = Object.keys(userInfo) as Array<keyof UserInfoState>;
+
+      for (let key of keys) {
+        if (this.isEmptyString(userInfo[key])) return false;
+      }
+      return true;
+    },
   };
 
   const handleClickSubmit = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     try {
-      if (!isAllFilledIn(userInfo)) {
-        let message = "모든 필드가 채워지지 않았습니다.";
+      if (!checkers.isAllFilledIn(userInfo)) {
+        let message = "빈칸을 확인해주세요";
         setError(message);
         setOpen(true);
         throw new Error(message);
       }
-      if (!isSamePassword()) {
+      if (!checkers.isSamePassword()) {
         let message = "비밀번호를 다시 확인해 주세요";
         setError(message);
         setOpen(true);
         throw new Error(message);
       }
+      if (checkers.isIncludingSpecialCh(userInfo.username)) {
+        throw new Error("아이디에 특수문자가 들어가 있습니다");
+      }
+
       const result = await axios.post("/auth/signup", { ...userInfo });
       console.log(result);
       navigate("/", { replace: true });
-    } catch (error) {
-      console.log(error);
-      console.error("계정 만들기에 실패함");
-    }
+    } catch (error) {}
   };
   //event handlers
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,3 +117,28 @@ function SingUpHeader() {
     </Grid>
   );
 }
+
+// const getEmptyFields = (userInfo: UserInfoState) => {
+//   const results: Partial<UserInfoKeys>[] = [];
+
+//   const keys = Object.keys(userInfo) as Array<keyof UserInfoState>;
+//   for (let key of keys) {
+//     if (isEmptyString(userInfo[key])) results.push(key);
+//   }
+//   return results;
+// };
+
+// const emptyFields = getEmptyFields(userInfo);
+// if (emptyFields.length) {
+//   const newDisplay: DisplayState = {
+//     nickname: "none",
+//     password: "none",
+//     passwordConfirm: "none",
+//     username: "none",
+//   };
+//   emptyFields.forEach((field) => (newDisplay[field] = "block"));
+//   setDisplay((prev) => newDisplay);
+
+//   let message = "모든 필드가 채워지지 않았습니다.";
+//   throw new Error(message);
+// }
